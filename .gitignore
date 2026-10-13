@@ -1,0 +1,13 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+.env
+.env.*
+!.env.example
+*.local
+.tmp/
+supabase/.temp/
+supabase/.branches/
+# Preserve the supplied original locally; track its unchanged docs copy.
+/Movie-Night-Engine-Plan-and-Codex-Handoff.md
