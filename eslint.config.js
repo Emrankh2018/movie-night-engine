@@ -4,7 +4,7 @@ import hooks from 'eslint-plugin-react-hooks';
 import refresh from 'eslint-plugin-react-refresh';
 
 export default tseslint.config(
-  { ignores: ['dist/**', 'node_modules/**', 'test-results/**', 'playwright-report/**'] },
+  { ignores: ['dist/**', 'node_modules/**', 'test-results/**', 'playwright-report/**', '.tmp/**', 'graphify-out/**'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

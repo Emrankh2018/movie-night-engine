@@ -11,3 +11,5 @@ supabase/.temp/
 supabase/.branches/
 # Preserve the supplied original locally; track its unchanged docs copy.
 /Movie-Night-Engine-Plan-and-Codex-Handoff.md
+# Graph indexes are local navigation caches, regenerated from tracked source.
+graphify-out/

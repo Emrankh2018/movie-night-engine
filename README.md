@@ -49,3 +49,9 @@ Actual cash spending: **0 QAR**, with **92 QAR** preserved. Optional accounts us
 The real-catalog alpha still requires founder-approved editorial records, documented rights, reviewed Qatar availability and fluent Arabic review. Accounts were brought forward by the explicit M2A request. Real data and public deployment remain gated. See [M2A verification](docs/M2A_RECEIPT.md), `docs/PRODUCT_PLAN.md`, `docs/DECISIONS.md`, `docs/DATA_RIGHTS.md` and `docs/RELEASE_CHECKLIST.md`.
 
 The visual redesign uses original geometric covers and self-hosted open-license English/Arabic fonts. Reference notes and font provenance are in `docs/UI_DIRECTION.md`. With the dev server running, `npx tsx scripts/visual-review.ts` captures desktop, mobile, 320px and Arabic screenshots under `.tmp/ui-review`.
+
+## Daily upgrades and project navigation
+
+See [the daily roadmap](docs/UPGRADE_ROADMAP.md) for the next sessions, acceptance criteria and release/data/payment gates. Say “Implement Day 01 only” to begin a bounded slice. The roadmap does not start an automation or authorize all future features.
+
+[PROJECT_MAP.md](docs/PROJECT_MAP.md) connects product decisions to code/tests. Optional local Graphify tooling uses existing Python/uv/Graphify, with no API calls: `npm run graph:build`, `npm run graph:status`, then `npm run graph:query -- "AccountController" --budget 800`. It indexes code and native Markdown structure and keeps generated graphs ignored. It is development tooling; the app does not depend on Python or Graphify.

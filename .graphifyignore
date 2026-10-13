@@ -1,0 +1,24 @@
+# Local graph scope. No credentials, user histories or generated assets.
+.git/
+node_modules/
+dist/
+.tmp/
+test-results/
+playwright-report/
+graphify-out/
+.env
+.env.*
+*.local
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.db
+*auth-state*.json
+*storage-state*.json
+supabase/.temp/
+supabase/.branches/
+public/fonts/
+package-lock.json
+Movie-Night-Engine-Plan-and-Codex-Handoff.md

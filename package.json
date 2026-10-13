@@ -11,7 +11,10 @@
     "test:e2e": "vite build --mode e2e && playwright test",
     "validate:catalog": "tsx scripts/validate-catalog.ts",
     "build": "npm run typecheck && vite build",
-    "preview": "vite preview --host 127.0.0.1"
+    "preview": "vite preview --host 127.0.0.1",
+    "graph:build": "python scripts/build-graph.py",
+    "graph:status": "python scripts/build-graph.py --status",
+    "graph:query": "graphify query"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.3",
