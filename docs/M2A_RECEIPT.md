@@ -1,6 +1,6 @@
 # M2A acceptance receipt — 13 October 2026
 
-Status: **implemented; automated and database checks passed; live account verification partially complete.** No public release. Spending: **0 QAR**, with the **92 QAR** reserve preserved.
+Status: **implemented and pushed; automated, database and core live account checks passed.** Physical-device and token-expiry checks remain unverified. No public release. Spending: **0 QAR**, with the **92 QAR** reserve preserved.
 
 ## Implemented
 
@@ -22,21 +22,22 @@ Status: **implemented; automated and database checks passed; live account verifi
 | Browser contracts | 42 checks on Pixel 7 Chromium and desktop Chromium: original picker regressions plus synthetic auth cancellation, diary actions, import/clear, independent contexts, two-owner isolation, Arabic and explicit rewatch/history preservation |
 | Actual PostgreSQL | Rollback-only test verified two-owner read/write/delete isolation, forged owner denial, anonymous denial, duplicate choice/watch/import, separate dates, rewatch and undo/clear operations |
 | Supabase | Exact project/organization and free plan verified; migration history verified; security advisor returned no lints |
-| Real Google/browser/API | Provider enabled; owner completed real Google sign-in; Chosen save, Watched status, undo and session/diary reload worked; the same entry loaded from an independently stored localhost session; sign-out cleared that session and stayed signed out after reload |
+| Real Google/browser/API | Two consenting Google accounts signed in and showed separate diaries; switching accounts cleared the old rows; real consent cancellation returned to guest mode. Chosen save, Watched status, undo and session/diary reload worked. The same owner's entry loaded from independently stored localhost sessions; sign-out cleared that session and stayed signed out after reload |
+| Live guest import | A fresh localhost guest session created two fictional test titles. Explicit import saved both; repeat import reported zero inserted/two skipped. A Watched title with no selection date retained Date unknown. Reload and an account round trip preserved the records |
+| Live bilingual UI | Arabic diary labels, dates, mixed-direction identity and RTL rendered with no horizontal overflow; automated mobile/desktop checks also passed |
+| Live deletion/clear | After explicit approval for three fictional test entries, Delete removed one second-account entry and Clear removed its remaining entry. The first account's entry stayed intact, proving account scope. Its approved test entry was then deleted. Empty diary persisted on reload; existing guest history remained intact |
 | GitHub link | Saved same private repository connection; production deploy and branching switches off after Dashboard reload |
 | Source hygiene | Staged credentials/artifact scan clean; the report's local and Git-index bytes match the original SHA-256; existing report/license whitespace preserved |
 
-The browser contract suite uses deliberately invalid synthetic tokens and an in-memory API fixture. Its passing cross-device/two-user tests are not a claim of two real Google users or physical devices. The live database isolation test uses transaction-scoped identities, not Google accounts. The second live app session used a separate localhost origin and the same Google owner; this proves server persistence across independent app storage, not a physical second-device test.
+The browser contract suite uses deliberately invalid synthetic tokens and an in-memory API fixture. Actual database isolation and two real Google accounts were also tested separately. The independent live app sessions used localhost and 127.0.0.1 origins on this machine; this proves server persistence across independent app storage, not a physical second-device test.
 
 ## Live checks still pending
 
-- Two consenting Google users: the second account has not been selected/authorized for live testing. Check that each sees only its own diary, including after account switching. Database isolation is already verified independently.
-- A physical second device and real Google cancellation/refresh-token renewal. Reload restoration passed; token-expiry renewal was not forced.
-- Live guest import and permanent delete/clear were not performed against the owner's existing guest/history data. Their UI contracts and actual SQL behavior passed. Test with explicitly disposable movie-night entries when authorized.
+- A physical second device and refresh-token renewal at expiry. Reload restoration and real cancellation passed; token-expiry renewal was not forced.
 - Safari/Firefox and fluent Arabic editorial review remain unverified. Automated Chromium/mobile layout checks passed.
 
-One fictional Chosen night created during the owner's live smoke test remains in that private diary. The pre-existing guest history was not imported or cleared. Live browser screenshots and session data are not committed.
+All three fictional account test entries were removed with the owner's explicit approval. A project-scoped database count confirmed zero remaining diary rows; migration history still contains only version `20261013182848`. The owner's pre-existing guest history was not imported or cleared. The fresh localhost test guest history is separate and retained; the secondary account was signed out. Live browser screenshots and session data are not committed.
 
 ## Next gate
 
-Finish the listed live account checks with consenting test identities and disposable history. Before a real-catalog alpha, document rights, obtain founder approval of editorial records and review Qatar availability/Arabic content. Watchlists, ratings, social/group features, payments, AI and public deployment remain deferred. No paid API or additional subscription was used.
+Finish the physical-device and token-expiry checks before broader account alpha use. Before a real-catalog alpha, document rights, obtain founder approval of editorial records and review Qatar availability/Arabic content. Watchlists, ratings, social/group features, payments, AI and public deployment remain deferred. No paid API or additional subscription was used.
