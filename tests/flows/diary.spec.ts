@@ -89,6 +89,27 @@ test('refresh, cross-device persistence and two-user isolation using synthetic A
   }
 });
 
+test('expired synthetic SDK sessions renew for the same owner and logout removes them',async ({ browser }) => {
+  for (const [owner,email] of [[USER_A,'user-a@example.invalid'],[USER_B,'user-b@example.invalid']] as const) {
+    const backend = new DiaryBackend(); const device = await browser.newContext();
+    try {
+      await backend.install(device); await seedMockSession(device,owner,true);
+      const page = await device.newPage(); await page.goto('http://127.0.0.1:4173/'); await openDiary(page);
+      await expect(page.getByText(email,{ exact: true })).toBeVisible();
+      await expect(page.getByText('Your next movie night starts here. Choose a pick to save it.',{ exact: true })).toBeVisible();
+      expect(backend.refreshes).toBe(1);
+      await page.reload(); await openDiary(page); await expect(page.getByText(email,{ exact: true })).toBeVisible();
+      expect(backend.refreshes).toBe(1);
+      await page.getByRole('button',{ name: 'Sign out',exact: true }).click();
+      await expect(page.getByRole('button',{ name: 'Sign in with Google',exact: true })).toBeVisible();
+      await page.reload(); await openDiary(page);
+      await expect(page.getByText(email,{ exact: true })).toHaveCount(0);
+      expect(await page.evaluate(key => localStorage.getItem(key),AUTH_STORAGE_KEY)).toBeNull();
+      expect(backend.refreshes).toBe(1);
+    } finally { await device.close(); }
+  }
+});
+
 test('Arabic private diary preserves mobile layout',async ({ page,context },info) => {
   const backend = new DiaryBackend(); await backend.install(context); await seedMockSession(context,USER_A);
   await page.goto('/'); await openDiary(page); await expect(page.getByText('user-a@example.invalid',{ exact: true })).toBeVisible();

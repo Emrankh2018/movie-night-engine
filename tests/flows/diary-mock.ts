@@ -6,20 +6,22 @@ import { AUTH_STORAGE_KEY, PROJECT_URL } from '../../src/diary/supabase';
 export const USER_A = 'f2c60c1b-6849-46e2-a8d2-bd389ca13b11';
 export const USER_B = 'f2c60c1b-6849-46e2-a8d2-bd389ca13b22';
 function user(id: string) { return { id,aud: 'authenticated',role: 'authenticated',email: id === USER_A ? 'user-a@example.invalid' : 'user-b@example.invalid',app_metadata: { provider: 'google',providers: ['google'] },user_metadata: {},identities: [],created_at: '2026-10-13T12:00:00Z' }; }
-function session(id: string) {
-  const jwt = [Buffer.from('{"alg":"HS256","typ":"JWT"}').toString('base64url'),Buffer.from(JSON.stringify({ sub: id,aud: 'authenticated',exp: 4102444800,iat: 1791892800 })).toString('base64url'),'synthetic-signature-never-valid-on-supabase'].join('.');
-  return { access_token: jwt,refresh_token: `synthetic-refresh-${id}`,token_type: 'bearer',expires_at: 4102444800,expires_in: 3600,user: user(id) };
+function session(id: string, expired = false) {
+  const expiry = expired ? Math.floor(Date.now() / 1000) - 60 : 4102444800;
+  const jwt = [Buffer.from('{"alg":"HS256","typ":"JWT"}').toString('base64url'),Buffer.from(JSON.stringify({ sub: id,aud: 'authenticated',exp: expiry,iat: 1791892800 })).toString('base64url'),'synthetic-signature-never-valid-on-supabase'].join('.');
+  return { access_token: jwt,refresh_token: `synthetic-refresh-${id}`,token_type: 'bearer',expires_at: expiry,expires_in: 3600,user: user(id) };
 }
-export async function seedMockSession(context: BrowserContext,id: string) {
+export async function seedMockSession(context: BrowserContext,id: string, expired = false) {
   await context.addInitScript(({ key,value }) => {
     if (!sessionStorage.getItem('mne-test-session-seeded')) { localStorage.setItem(key,JSON.stringify(value)); sessionStorage.setItem('mne-test-session-seeded','true'); }
-  },{ key: AUTH_STORAGE_KEY,value: session(id) });
+  },{ key: AUTH_STORAGE_KEY,value: session(id,expired) });
 }
 export class DiaryBackend {
   rows: Night[] = [];
   google = true;
   cancelGoogle = false;
   writes = 0;
+  refreshes = 0;
   async install(context: BrowserContext) {
     await context.route('**/*',async route => {
       const url = new URL(route.request().url());
@@ -34,7 +36,15 @@ export class DiaryBackend {
     if (method === 'OPTIONS') return reply({});
     if (url.pathname === '/auth/v1/settings') return reply({ external: { google: this.google } });
     if (url.pathname === '/auth/v1/authorize') return route.fulfill({ status: 302,headers: { location: `http://127.0.0.1:4173/auth/callback?${this.cancelGoogle ? 'error=access_denied' : 'code=synthetic-test-code'}` } });
-    if (url.pathname === '/auth/v1/token') return reply(session(USER_A));
+    if (url.pathname === '/auth/v1/token') {
+      if (url.searchParams.get('grant_type') === 'refresh_token') {
+        const token = request.postDataJSON()?.refresh_token;
+        const id = [USER_A,USER_B].find(candidate => token === `synthetic-refresh-${candidate}`);
+        if (!id) return reply({ message: 'Synthetic refresh rejected' },401);
+        this.refreshes++; return reply(session(id));
+      }
+      return reply(session(USER_A));
+    }
     let owner: string | null = null;
     try { owner = JSON.parse(Buffer.from(request.headers().authorization.split(' ')[1].split('.')[1],'base64url').toString()).sub; } catch { /* Missing/invalid synthetic token. */ }
     if (!owner) return reply({ message: 'Synthetic auth required' },401);

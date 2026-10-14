@@ -26,7 +26,7 @@ npm run build
 npm run preview
 ```
 
-Browser installation is free. `test:e2e` builds an isolated test bundle with a deliberately invalid public fixture key and mocks all account requests. It needs no credentials or live Supabase writes. Tests run at `http://127.0.0.1:4173`. Run `npm run build` afterward before previewing real accounts. There is no service worker: guest recommendations work after external connectivity is lost, but first loading needs the local server. Account operations need network access.
+Browser installation is free. `test:e2e` builds an isolated test bundle under `.tmp/e2e-dist` with a deliberately invalid public fixture key and mocks all account requests. It needs no credentials or live Supabase writes, and leaves the production `dist` untouched. Tests run at `http://127.0.0.1:4173`. Use `npm run build` to refresh the production preview after app changes. There is no service worker: guest recommendations work after external connectivity is lost, but first loading needs the local server. Account operations need network access.
 
 ## What M1 contains
 

@@ -2,6 +2,8 @@
 
 Prepared 13 October 2026. This is the working backlog for future sessions, not authorization to execute every row or launch the app. Start at the first ready row; say **“Implement Day 01 only”** (or its ID) to begin. Days are work sessions, not fixed calendar promises. Assume 60–120 minutes per session; split a larger item rather than weakening its acceptance. External review/recruitment waits do not count as development days. No daily automation or unattended coding job is enabled.
 
+Current session: **Day 01 / AUTH-01 started on 14 October 2026; acceptance still in progress.** See [the daily receipt](daily/DAY_01_AUTH_01.md). No later row has started.
+
 Cash ceiling remains **0 QAR**; preserve the **92 QAR** reserve. Use existing Codex, the private GitHub repo and the existing free Supabase project only. No client infrastructure, Top Vision data or synced reference files. Planned gated features require their evidence and fresh authorization; future pricing/free-tier terms must be checked when a service is actually selected.
 
 ## Where we are

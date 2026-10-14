@@ -53,4 +53,4 @@ npm run test:e2e
 npm run build
 ```
 
-Browser tests compile in `e2e` mode with an invalid fixture public key, intercept account calls and block other external requests. They do not test live Google credentials. Run the normal build afterward to restore real local configuration. Verification layers and remaining live checks are listed in `M2A_RECEIPT.md`.
+Browser tests compile in `e2e` mode under `.tmp/e2e-dist` with an invalid fixture public key, intercept account calls and block other external requests. They do not test live Google credentials and leave production `dist` untouched. Build normally after app changes to update the real preview. Verification layers and remaining live checks are listed in `M2A_RECEIPT.md`.
